@@ -1,0 +1,28 @@
+import random
+
+# Define a simple neural network with two layers
+class SimpleNN:
+    def _init_(self):
+        self.weights = [random.random() for _ in range(2)]  # Two layers
+
+    def forward(self, x):
+        return x * self.weights[0] + self.weights[1]  # Simple linear transformation
+
+# Function to apply differential privacy (DP)
+def dp_sgd_update(gradient, noise_scale, clipping_norm):
+    clipped_gradient = min(gradient, clipping_norm)  # Clip gradient
+    noisy_gradient = clipped_gradient + random.gauss(0, noise_scale)  # Add noise
+    return noisy_gradient
+
+# Train model with DP-SGD
+model = SimpleNN()
+learning_rate = 0.1
+noise_scale = 1.0
+clipping_norm = 1.0
+
+for _ in range(10):  # Simulate 10 training steps
+    gradient = random.uniform(-1, 1)  # Simulate a gradient
+    dp_gradient = dp_sgd_update(gradient, noise_scale, clipping_norm)
+    model.weights[0] -= learning_rate * dp_gradient  
+
+print("Training completed with DP-SGD")
